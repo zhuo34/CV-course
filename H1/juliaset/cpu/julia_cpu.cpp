@@ -1,9 +1,8 @@
 #include "utilities.h"
-#include "julia_gpu.h"
+#include "julia_cpu.h"
 
 
-
-__host__ __device__ float julia(int x, int y, cuComplex c, int w, int h) {
+float julia(int x, int y, cuComplex c, int w, int h) {
     const float scale = 1.5;
     float jx = scale * (float)(x - w/2)/(h/2);
     float jy = scale * (float)(y - h/2)/(h/2);
@@ -18,22 +17,6 @@ __host__ __device__ float julia(int x, int y, cuComplex c, int w, int h) {
     }
 
     return 0;
-}
-
-__global__ void kernel(unsigned char* ptr, cuComplex c, JuliaSetColor color, int w, int h) {
-    // map from blockIdx to pixel position
-    int x = blockIdx.x;
-    int y = blockIdx.y;
-    int offset = x + y * gridDim.x;
-
-    // now calculate the value at that position
-    float juliaValue = julia(x, y, c, w, h);
-    // calculate color for this value
-    RGB rgb = color.getColor(juliaValue);
-
-    ptr[offset+0*w*h] = (unsigned char)(rgb.b * 255);
-    ptr[offset+1*w*h] = (unsigned char)(rgb.g * 255);
-    ptr[offset+2*w*h] = (unsigned char)(rgb.r * 255);
 }
 
 /**
@@ -62,20 +45,6 @@ cuComplex second_circle(float theta) {
     return {r, i};
 }
 
-/**
- * Callback function for glut
- * @param devPtr
- * @param datablock
- * @param tick
- */
-void render(unsigned char* ptr, unsigned char* devPtr, float state, int w, int h) {
-    dim3    grid(w, h);
-    auto c = main_cardioid(state * 2 * PI);
-    JuliaSetColor color(0.3, 0.87, 0.9);
-    kernel<<<grid,1>>>(devPtr, c, color, w, h);
-    cudaMemcpy(ptr, devPtr, sizeof(unsigned char) * 3 * w * h, cudaMemcpyDeviceToHost);
-}
-
 void render(unsigned char* ptr, float state, int w, int h) {
     auto c = main_cardioid(state * 2 * PI);
     JuliaSetColor color(0.3, 0.87, 0.9);
@@ -90,15 +59,4 @@ void render(unsigned char* ptr, float state, int w, int h) {
         }
     }
 
-//    kernel<<<grid,1>>>(devPtr, c, color, w, h);
-//    cudaMemcpy(ptr, devPtr, sizeof(unsigned char) * 3 * w * h, cudaMemcpyDeviceToHost);
-}
-
-
-void gpuMemAlloc(unsigned char **p, size_t size) {
-    cudaMalloc(p, size);
-}
-
-void gpuMemFree(unsigned char *p) {
-    cudaFree(p);
 }

@@ -27,7 +27,6 @@ __global__ void kernel(unsigned char* ptr, cuComplex c, JuliaSetColor color, int
 cuComplex main_cardioid(float theta);
 cuComplex second_circle(float theta);
 void render(unsigned char* ptr, unsigned char* devPtr, float state, int w, int h);
-void render(unsigned char* ptr, float state, int w, int h);
 
 void gpuMemAlloc(unsigned char **p, size_t size);
 

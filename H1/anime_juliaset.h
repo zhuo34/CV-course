@@ -7,20 +7,24 @@
 
 #include "AnimeCreator.h"
 
-
+#ifdef H1_JULIA_USE_GPU
 extern void render(unsigned char* ptr, unsigned char* devPtr, float state, int w, int h);
-extern void render(unsigned char* ptr, float state, int w, int h);
 extern void gpuMemAlloc(unsigned char **p, size_t size);
 extern void gpuMemFree(unsigned char *p);
+#else
+extern void render(unsigned char* ptr, float state, int w, int h);
+#endif
 
 cv::Point mainCardioid(double theta, cv::Size size);
 
 class JuliaSetAnime: public Anime {
 private:
     cv::Size size;
-    unsigned char *ptr = nullptr;
-    unsigned char *devPtr = nullptr;
     double sec = 32.5;
+    unsigned char *ptr = nullptr;
+#ifdef H1_JULIA_USE_GPU
+    unsigned char *devPtr = nullptr;
+#endif
 
 public:
     explicit JuliaSetAnime(AnimeCreator &ac): Anime(ac) {
@@ -29,11 +33,15 @@ public:
         int w = size.width;
         int h = size.height;
         ptr = new unsigned char[3*w*h];
+#ifdef H1_JULIA_USE_GPU
         gpuMemAlloc(&devPtr, sizeof(unsigned char) * 3 * w * h);
+#endif
     }
     ~JuliaSetAnime() override {
         delete ptr;
+#ifdef H1_JULIA_USE_GPU
         gpuMemFree(devPtr);
+#endif
     }
     void draw(Canvas &canvas, int frameCnt) override;
     cv::Mat render(float state);
