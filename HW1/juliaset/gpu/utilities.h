@@ -18,7 +18,6 @@ struct HSV {
     float h, s, v;
     __host__ __device__ HSV() : h(0), s(0), v(0)  {}
     __host__ __device__ HSV(float _h, float _s, float _v) : h(_h), s(_s), v(_v)  {}
-    __host__ __device__ HSV(const HSV &a) = default;
 
     __host__ __device__ RGB toRGB() const;
 };
