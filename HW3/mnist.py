@@ -59,6 +59,7 @@ class MNISTDataModule(pl.LightningDataModule):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Train')
+    parser.add_argument('mode', metavar='mode', type=str, default='test', help='mode')
     parser.add_argument('--dataset', metavar='PATH', type=str, default='datasets', help='dataset path')
     parser.add_argument('--log', metavar='PATH', type=str, default='out/lenet5/logs', help='log path')
     parser.add_argument('--modeldir', metavar='PATH', type=str, default='out/lenet5/models', help='model path')
@@ -75,20 +76,30 @@ if __name__ == "__main__":
 
     mnist = MNISTDataModule(args)
 
-    model = LeNet5(args)
-    tb_logger = pl_loggers.TensorBoardLogger(args.log)
-    es = EarlyStopping(monitor='val/loss', patience=10)
-    checkpoint_callback = ModelCheckpoint(
-        dirpath=args.modeldir,
-        save_top_k=3,
-        monitor="val/loss",
-        save_last=True
-    )
-    trainer = pl.Trainer(
-        gpus=args.gpus,
-        min_epochs=args.min_epochs,
-        max_epochs=args.max_epochs,
-        logger=tb_logger,
-        callbacks=[es, checkpoint_callback],
-    )
-    trainer.fit(model, datamodule=mnist)
+    if args.mode == 'train':
+        model = LeNet5(args)
+        tb_logger = pl_loggers.TensorBoardLogger(args.log)
+        es = EarlyStopping(monitor='val/loss', patience=10)
+        checkpoint_callback = ModelCheckpoint(
+            dirpath=args.modeldir,
+            save_top_k=3,
+            monitor="val/loss",
+            save_last=True
+        )
+        trainer = pl.Trainer(
+            gpus=args.gpus,
+            min_epochs=args.min_epochs,
+            max_epochs=args.max_epochs,
+            logger=tb_logger,
+            callbacks=[es, checkpoint_callback],
+        )
+        trainer.fit(model, datamodule=mnist)
+    elif args.mode == 'test':
+        cp_path = os.path.join(args.modeldir, 'last.ckpt')
+        model = LeNet5.load_from_checkpoint(cp_path, args=args)
+        trainer = pl.Trainer(
+            gpus=args.gpus,
+            logger=False
+        )
+        out = trainer.test(model, datamodule=mnist)
+        print(out[0])

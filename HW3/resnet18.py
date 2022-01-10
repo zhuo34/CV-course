@@ -48,13 +48,13 @@ class myresnet18(pl.LightningModule):
         self.log('test/accuracy', acc, sync_dist=True, batch_size=self.batch_size)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        optimizer = torch.optim.SGD(self.parameters(), lr=self.lr, momentum=0.9, weight_decay=self.weight_decay)
         scheduler = ExponentialLR(optimizer, gamma=0.9)
 
         return {
             "optimizer": optimizer,
-            "lr_scheduler": {
-                "scheduler": scheduler,
-                "frequency": 1
-            },
+            # "lr_scheduler": {
+            #     "scheduler": scheduler,
+            #     "frequency": 1
+            # },
         }
