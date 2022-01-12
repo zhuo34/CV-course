@@ -8,17 +8,57 @@
 
 网络结构使用 [LeNet5](https://ieeexplore.ieee.org/document/726791?reload=true&arnumber=726791) 对手写数字数据集进行分类测试。
 
+训练参数如下
+
+|              | 参数                                   |
+| ------------ | -------------------------------------- |
+| 优化器       | Adam                                   |
+| 学习率       | 0.001 with Exponential scheduler       |
+| weight decay | 1e-4                                   |
+| batch size   | 64                                     |
+| early stop   | patience=10 monitering validation loss |
+| min epoch    | 50                                     |
+
 训练过程验证集准确率变化如下。
 
-![accuracy][img/val.png]
+![accuracy](img/val.png)
+
+测试集准确率如下
 
 |        | Accuracy |
 | ------ | -------- |
 | 测试集 | 0.990    |
 
-
-
 ### CIFAR10
 
+网络结构使用 [ResNet50](https://openaccess.thecvf.com/content_cvpr_2016/html/He_Deep_Residual_Learning_CVPR_2016_paper.html) 对物体识别数据集进行分类测试。
 
+> 注意：pytorch 的 ResNet 以 ImageNet 为训练集，因此在用到 CIFAR10上时需要将第一层卷积核改小（3，3），并去除一个池化层
+>
+> ```python
+> self.net = resnet50()
+> self.net.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+> self.net.maxpool = nn.Identity()
+> ```
+
+训练参数如下
+
+|              | 参数  |
+| ------------ | ----- |
+| 优化器       | SGD   |
+| 学习率       | 0.001 |
+| momentum     | 0.9   |
+| weight decay | 5e-4  |
+| batch size   | 256   |
+| epoch        | 400   |
+
+训练过程验证集准确率变化如下。
+
+![accuracy](img/cifar10-val.png)
+
+测试集准确率如下
+
+|        | Accuracy |
+| ------ | -------- |
+| 测试集 | 0.902    |
 
