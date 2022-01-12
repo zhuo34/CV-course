@@ -37,6 +37,38 @@
 | ------ | -------- |
 | 测试集 | 0.990    |
 
+使用方法
+
+```shell
+$ python mnist.py --help
+usage: mnist.py [-h] [--dataset PATH] [--log PATH] [--modeldir PATH]
+                [--out PATH] [--gpus gpus] [--min_epochs MIN_EPOCHS]
+                [--max_epochs MAX_EPOCHS] [--bz batch_size] [--lr lr]
+                [--weight_decay weight_decay]
+                mode
+
+MNIST
+
+positional arguments:
+  mode                  mode, train or test
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --dataset PATH        dataset path
+  --log PATH            log path
+  --modeldir PATH       model path
+  --out PATH            out path
+  --gpus gpus           GPU id
+  --min_epochs MIN_EPOCHS
+                        min epochs
+  --max_epochs MAX_EPOCHS
+                        max epochs
+  --bz batch_size       batch size
+  --lr lr               learning rate
+  --weight_decay weight_decay
+                        weight decay
+```
+
 ### CIFAR10
 
 网络结构使用 [ResNet50](https://openaccess.thecvf.com/content_cvpr_2016/html/He_Deep_Residual_Learning_CVPR_2016_paper.html) 对物体识别数据集进行分类测试。
@@ -71,4 +103,36 @@
 |        | Accuracy |
 | ------ | -------- |
 | 测试集 | 0.902    |
+
+使用方式
+
+```shell
+$ python cifar10.py --help
+usage: cifar10.py [-h] [--dataset PATH] [--log PATH] [--modeldir PATH]
+                  [--out PATH] [--gpus gpus] [--min_epochs MIN_EPOCHS]
+                  [--max_epochs MAX_EPOCHS] [--bz batch_size] [--lr lr]
+                  [--weight_decay weight_decay]
+                  mode
+
+CIFAR10
+
+positional arguments:
+  mode                  mode, train or test
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --dataset PATH        dataset path
+  --log PATH            log path
+  --modeldir PATH       model path
+  --out PATH            out path
+  --gpus gpus           GPU id
+  --min_epochs MIN_EPOCHS
+                        min epochs
+  --max_epochs MAX_EPOCHS
+                        max epochs
+  --bz batch_size       batch size
+  --lr lr               learning rate
+  --weight_decay weight_decay
+                        weight decay
+```
 
