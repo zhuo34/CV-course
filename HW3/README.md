@@ -1,5 +1,11 @@
 # HW 3 - CNN
 
+### 目录
+
+- [依赖](#依赖)
+- [MNIST](#MNIST)
+- [CIFAR10](#CIFAR10)
+
 ### 依赖
 
 本实验使用 `pytorch` 和 `pytorch-lightning` 完成 CNN 训练任务。
@@ -7,6 +13,8 @@
 ### MNIST
 
 网络结构使用 [LeNet5](https://ieeexplore.ieee.org/document/726791?reload=true&arnumber=726791) 对手写数字数据集进行分类测试。
+
+![LeNet5](img/lenet5.png)
 
 训练参数如下
 
@@ -32,6 +40,8 @@
 ### CIFAR10
 
 网络结构使用 [ResNet50](https://openaccess.thecvf.com/content_cvpr_2016/html/He_Deep_Residual_Learning_CVPR_2016_paper.html) 对物体识别数据集进行分类测试。
+
+![ResNet50](img/resnet50.png)
 
 > 注意：pytorch 的 ResNet 以 ImageNet 为训练集，因此在用到 CIFAR10上时需要将第一层卷积核改小（3，3），并去除一个池化层
 >
